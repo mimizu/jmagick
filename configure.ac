@@ -230,13 +230,6 @@ else
 fi
 AC_SUBST(JAVAC)
 
-dnl Determine if we have the Java header file generator
-AC_PATH_PROG(JAVAH, javah, not_found)
-if test ${JAVAH} = not_found; then
-	AC_MSG_ERROR('No Java header generator (javah) found')
-fi
-AC_SUBST(JAVAH)
-
 dnl Determine if we have jar
 AC_PATH_PROG(JAR, jar, not_found)
 if test ${JAR} = not_found; then
