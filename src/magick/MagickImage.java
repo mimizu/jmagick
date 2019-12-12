@@ -2146,4 +2146,15 @@ public class MagickImage extends Magick {
 
     public native MagickImage optimizeLayer(ImageInfo imageInfo)
       throws MagickException;
+
+    /**
+     * Set an image property.
+     *
+     * @param property  the name of the property. this should not be {@code null}.
+     * @param value the value of the property. if {@code value == null}, delete the property.
+     * @return a boolean value indicating success
+     * @throws MagickException
+     */
+    public native boolean setImageProperty(String property, String value)
+      throws MagickException;
 }
