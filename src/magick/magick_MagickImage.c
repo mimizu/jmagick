@@ -6172,3 +6172,40 @@ JNIEXPORT jobject JNICALL Java_magick_MagickImage_deconstructImages
 
     return newObj;
 }
+
+/*
+ * Class:     magick_MagickImage
+ * Method:    setImageProperty
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_magick_MagickImage_setImageProperty
+    (JNIEnv *env, jobject self, jstring property, jstring value)
+{
+    const char *propertyStr, *valueStr;
+    Image *image =
+        (Image*) getHandle(env, self, "magickImageHandle", NULL);
+    if (image == NULL) {
+        throwMagickException(env, "Cannot obtain image handle");
+        return JNI_FALSE;
+    }
+
+    propertyStr = (*env)->GetStringUTFChars(env, property, 0);
+    if (value == NULL) {
+        jboolean result = DeleteImageProperty(image, propertyStr);
+        (*env)->ReleaseStringUTFChars(env, property, propertyStr);
+        return result;
+    }
+    valueStr = (*env)->GetStringUTFChars(env, value, 0);
+
+#if MagickLibVersion < 0x700
+    jboolean result = SetImageProperty(image, propertyStr, valueStr);
+#else
+    ExceptionInfo *exception = AcquireExceptionInfo();
+    jboolean result = SetImageProperty(image, propertyStr, valueStr, exception);
+    DestroyExceptionInfo(exception);
+#endif
+
+    (*env)->ReleaseStringUTFChars(env, property, propertyStr);
+    (*env)->ReleaseStringUTFChars(env, value, valueStr);
+    return result;
+}
